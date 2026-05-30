@@ -19,9 +19,9 @@ dependency "resource_group" {
 }
 
 dependency "subnet" {
-  config_path = "../network/subnet"
+  config_path = "../../network/subnet"
   mock_outputs = {
-    id   = "mock-subnet-id"
+    id   = "/subscriptions/abd13184-ef5f-4226-83e4-12d6fbacc980/resourceGroups/mock-rg/providers/Microsoft.Network/virtualNetworks/mock-vnet/subnets/mock-subnet"
     name = "mock-subnet-name"
   }
   mock_outputs_allowed_terraform_commands = ["validate", "plan", "init"]
@@ -49,16 +49,16 @@ variable "tags"     { type = map(string) }
 variable "vnet_subnet_id" { type = string }
 variable "resource_group_name" { type = string }
 resource "azurerm_kubernetes_cluster" "this" {
-  name                = "k8s-${var.prefix}"
+  name                = "k8s-$${var.prefix}"
   location            = var.location
   oidc_issuer_enabled = true
   workload_identity_enabled = true
   resource_group_name = var.resource_group_name
-  dns_prefix          = "k8s-${var.prefix}"
+  dns_prefix          = "k8s-$${var.prefix}"
   default_node_pool {
     name       = "default"
     node_count = 1
-    vm_size    = "Standard_B4ms"
+    vm_size    = "Standard_B4s_v2"
     vnet_subnet_id = var.vnet_subnet_id
   }
   identity {

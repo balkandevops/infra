@@ -12,7 +12,7 @@ inputs = {
   name  = "argocd"
   chart = "argo-cd"
   repository = "oci://ghcr.io/argoproj/argo-helm"
-  version = "9.4.4"
+  chart_version = "9.4.4"
   namespace     = "argocd"
   create_namespace = true
   wait = true
@@ -28,7 +28,7 @@ generate "main" {
 variable "name"  { type = string }
 variable "chart" { type = string }
 variable "repository" { type = string }
-variable "version" { type = string }
+variable "chart_version" { type = string }
 variable "namespace" { type = string }
 variable "create_namespace" { type = bool }
 variable "wait" { type = bool }
@@ -38,7 +38,7 @@ resource "helm_release" "this" {
   name             = var.name
   chart            = var.chart
   repository       = var.repository
-  version          = var.version
+  version          = var.chart_version
   namespace        = var.namespace
   create_namespace = var.create_namespace
   wait             = var.wait
