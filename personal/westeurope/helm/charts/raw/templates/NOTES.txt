@@ -1,0 +1,2 @@
+Raw chart deployed successfully.
+{{ len .Values.extraObjects }} extra object(s) rendered.

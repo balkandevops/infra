@@ -1,0 +1,12 @@
+apiVersion: v2
+name: raw
+version: 0.1.0
+description: >
+  A minimal empty chart for deploying arbitrary Kubernetes manifests
+  via extraObjects. Intended to be used as a dependency-ordered
+  release after a parent chart has installed its CRDs.
+type: application
+keywords:
+  - raw
+  - extra-objects
+  - manifests

@@ -1,0 +1,13 @@
+# List of arbitrary Kubernetes manifests to deploy.
+# Each entry should be a full Kubernetes resource definition.
+extraObjects: []
+
+# Example:
+# extraObjects:
+#   - apiVersion: my.crd.io/v1
+#     kind: MyCRDResource
+#     metadata:
+#       name: my-resource
+#       namespace: default
+#     spec:
+#       foo: bar

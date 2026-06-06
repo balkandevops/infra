@@ -1,0 +1,107 @@
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: AppProject
+    metadata:
+      name: platform
+      namespace: argocd
+    spec:
+      sourceRepos:
+        - https://github.com/balkandevops/**
+        - oci://quay.io/jetstack/charts/cert-manager
+        - oci://ghcr.io/prometheus-community/charts/prometheus
+        - oci://ghcr.io/grafana-community/helm-charts/loki
+        - oci://ghcr.io/grafana-community/helm-charts/grafana
+        - https://grafana.github.io/helm-charts
+        - https://charts.bitnami.com/bitnami
+        - https://traefik.github.io/charts
+        - https://kubernetes-sigs.github.io/external-dns
+      destinations:
+        - server: https://kubernetes.default.svc
+          namespace: "*"
+      clusterResourceWhitelist:
+        - group: "*"
+          kind: "*"
+  - apiVersion: argoproj.io/v1alpha1
+    kind: AppProject
+    metadata:
+      name: applications
+      namespace: argocd
+    spec:
+      sourceRepos:
+        - https://github.com/balkandevops/**
+        - ghcr.io/cloudnative-pg/charts
+      destinations:
+        - server: https://kubernetes.default.svc
+          namespace: "*"
+      clusterResourceWhitelist:
+        - group: "*"
+          kind: "*"
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: platform-infra-root-app
+      namespace: argocd
+      labels:
+        app.kubernetes.io/part-of: platform-infra-app-of-apps
+        role: parent
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: platform
+      source:
+        repoURL: https://github.com/balkandevops/apps
+        targetRevision: HEAD
+        path: platform-infra/apps
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: platform-monitoring-root-app
+      namespace: argocd
+      labels:
+        app.kubernetes.io/part-of: platform-monitoring-app-of-apps
+        role: parent
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: platform
+      source:
+        repoURL: https://github.com/balkandevops/apps
+        targetRevision: HEAD
+        path: platform-monitoring/apps
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: platform-apps-root-app
+      namespace: argocd
+      labels:
+        app.kubernetes.io/part-of: platform-apps-app-of-apps
+        role: parent
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: applications
+      source:
+        repoURL: https://github.com/balkandevops/apps
+        targetRevision: HEAD
+        path: platform-apps/apps
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
